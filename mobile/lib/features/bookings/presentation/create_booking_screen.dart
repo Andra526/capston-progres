@@ -103,7 +103,9 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
       );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Request terkirim! Menunggu konfirmasi PT.')),
+        const SnackBar(
+          content: Text('Request terkirim! Menunggu konfirmasi PT.'),
+        ),
       );
       Navigator.pop(context);
     } catch (e) {
@@ -158,11 +160,17 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                       children: [
                         Text(
                           widget.trainer.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
                         ),
                         Text(
                           widget.trainer.gymName,
-                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),
@@ -188,7 +196,10 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                 children: [
                   for (final s in _slots)
                     Chip(
-                      label: Text('${s.day} ${s.startTime}-${s.endTime}', style: const TextStyle(fontSize: 11)),
+                      label: Text(
+                        '${s.day} ${s.startTime}-${s.endTime}',
+                        style: const TextStyle(fontSize: 11),
+                      ),
                       backgroundColor: Colors.white,
                       visualDensity: VisualDensity.compact,
                     ),
@@ -245,7 +256,12 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                   value: _duration,
                   isExpanded: true,
                   items: const [30, 45, 60, 90]
-                      .map((m) => DropdownMenuItem<int>(value: m, child: Text('$m menit')))
+                      .map(
+                        (m) => DropdownMenuItem<int>(
+                          value: m,
+                          child: Text('$m menit'),
+                        ),
+                      )
                       .toList(),
                   onChanged: (v) {
                     if (v != null) setState(() => _duration = v);
@@ -297,18 +313,16 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
             ),
             if (_error != null) ...[
               const SizedBox(height: 12),
-              Text(_error!, style: const TextStyle(color: Colors.redAccent, fontSize: 13)),
+              Text(
+                _error!,
+                style: const TextStyle(color: Colors.redAccent, fontSize: 13),
+              ),
             ],
             const SizedBox(height: 24),
             AppButton(
               label: 'Kirim Request Sesi',
               loading: _submitting,
               onPressed: _submit,
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Booking PT memerlukan membership aktif di cabang ini.',
-              style: TextStyle(color: Colors.grey, fontSize: 12),
             ),
           ],
         ),

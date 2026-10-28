@@ -6,7 +6,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma/prisma.service';
-import { GymMembershipsService } from '../gym-memberships/gym-memberships.service';
 import { CreateBookingDto } from './dto/booking.dto';
 
 const bookingInclude = {
@@ -24,10 +23,7 @@ const bookingInclude = {
 
 @Injectable()
 export class BookingsService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly memberships: GymMembershipsService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(clientId: string, dto: CreateBookingDto) {
     const trainer = await this.prisma.trainerProfile.findUnique({
@@ -43,16 +39,8 @@ export class BookingsService {
       throw new BadRequestException('Waktu sesi harus di masa depan');
     }
 
-    // Aturan bisnis: booking PT hanya untuk member aktif di cabang PT tersebut.
-    const hasMembership = await this.memberships.hasActiveMembership(
-      clientId,
-      trainer.gymId,
-    );
-    if (!hasMembership) {
-      throw new ForbiddenException(
-        'Anda butuh membership aktif di cabang ini untuk booking PT',
-      );
-    }
+    // Aturan bisnis: booking PT terbuka untuk semua client, baik yang punya
+    // membership (bulanan/tahunan) maupun yang tidak.
 
     const durationMin = dto.durationMin ?? 60;
     await this.assertNoOverlap(trainer.id, scheduledAt, durationMin);
